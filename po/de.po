@@ -1,0 +1,45 @@
+# German translations for PACKAGE package.
+# Copyright (C) 2017 Edit the file PACKAGE to change this.
+# This file is distributed under the same license as the PACKAGE package.
+# Guido Flohr <guido.flohr@cantanea.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Template-Plugin-Gettext-Seed\n"
+"Report-Msgid-Bugs-To: Edit the file PACAKGE to change this\n"
+"PO-Revision-Date: 2017-08-30 16:25+0300\n"
+"Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../templates/index.html:5
+msgid "Example for Template-Plugin-Gettext"
+msgstr "Template-Plugin-Gettext-Seed"
+
+#: ../templates/index.html:8
+msgid "Hello, {user}!"
+msgstr "Hallo, {user}!"
+
+#: ../templates/index.html:10
+msgid ""
+"The current locale for textdomain '{textdomain}' and language '{lang}' is "
+"'{locale}'!"
+msgstr ""
+"Die aktuelle Spracheinstellung für den Textbereich '{textdomain}' und die "
+"Sprache '{lang}' ist '{locale}'!"
+
+#: ../src/example.c:18
+#, c-format
+msgid "Try '%s --help' for more information.\n"
+msgstr "»%s --help« gibt weitere Informationen.\n"
+
+#: ../src/example.pl:13
+#, perl-brace-format
+msgid "One world!\n"
+msgid_plural "{num} worlds!\n"
+msgstr[0] "Eine Welt!\n"
+msgstr[1] "{num} Welten!\n"

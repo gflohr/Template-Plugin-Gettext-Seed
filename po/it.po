@@ -1,0 +1,45 @@
+# French translations for PACKAGE package.
+# Copyright (C) 2017 Guido Flohr
+# This file is distributed under the same license as the PACKAGE package.
+# Guido Flohr <guido.flohr@cantanea.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Template-Plugin-Gettext-Seed\n"
+"Report-Msgid-Bugs-To: Edit the file PACAKGE to change this\n"
+"PO-Revision-Date: 2017-08-30 18:07+0300\n"
+"Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../templates/index.html:5
+msgid "Example for Template-Plugin-Gettext"
+msgstr "Esempio per Template-Plugin-Gettext"
+
+#: ../templates/index.html:8
+msgid "Hello, {user}!"
+msgstr "Ciao, {user}!"
+
+#: ../templates/index.html:10
+msgid ""
+"The current locale for textdomain '{textdomain}' and language '{lang}' is "
+"'{locale}'!"
+msgstr ""
+"La locale corrente per dominio testo \"{textdomain}\" e lingua \"{lang}\" è "
+"\"{locale}\"!"
+
+#: ../src/example.c:18
+#, c-format
+msgid "Try '%s --help' for more information.\n"
+msgstr "Usare \"%s --help\" per maggiori informazioni.\n"
+
+#: ../src/example.pl:13
+#, perl-brace-format
+msgid "One world!\n"
+msgid_plural "{num} worlds!\n"
+msgstr[0] "Un mondo!\n"
+msgstr[1] "{num} mondi!\n"

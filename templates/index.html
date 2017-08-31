@@ -1,0 +1,16 @@
+[%- USE gtx = Gettext(textdomain, lang) -%]
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[% gtx.gettext('Example for Template-Plugin-Gettext') %]</title> 
+  </head>
+  <body>
+    <h1>[% gtx.xgettext('Hello, {user}!', user => username) %]</h1>
+    <p>
+      [% gtx.xgettext("The current locale for textdomain '{textdomain}' and language '{lang}' is '{locale}'!",
+                      textdomain => textdomain,
+                      lang => lang,
+                      locale = gtx.debug_locale()) %]
+    </p>
+  </body>
+</html>

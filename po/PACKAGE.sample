@@ -1,0 +1,22 @@
+# Makefile snippet that holds all package-dependent information.
+
+# Add more languages here!  Beware that this is a makefile snippet and
+# you have to adhere to make syntax.  If you add a language here, you
+# also have to create a PO file for that language.  Otherwise, the
+# build will fail.
+LINGUAS = bg de fr it
+
+# Textdomain for our package, usually something like "com.mydomain.www".
+TEXTDOMAIN =
+
+# Initial copyright holder added to pot and po files.
+COPYRIGHT_HOLDER = Edit the file PACKAGE to change this field
+
+# Where to send msgid bugs?  
+MSGID_BUGS_ADDRESS=Edit the file PACAKGE to change this
+
+# You can override the defaults for the following.
+#XGETTEXT_TT2 = xgettext-tt2
+#MSGMERGE     = msgmerge
+#MSGFMT       = msgfmt
+#XGETTEXT     = xgettext
