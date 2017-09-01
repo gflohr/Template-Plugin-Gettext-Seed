@@ -28,6 +28,10 @@ use File::Spec;
 
 sub read_package();
 sub usage(;$);
+sub command(@);
+sub fatal($);
+sub failure();
+sub safe_rename($$);
 
 my %actions = (
   pot => \&make_pot,
@@ -47,8 +51,8 @@ $package{PERL} = 'perl' if !defined $package{PERL};
 $package{MSGMERGE} = 'msgmerge' if !defined $package{MSGMERGE};
 $package{MSGFMT} = 'msgfmt' if !defined $package{MSGFMT};
 $package{XGETTEXT_TT2} = 'xgettext-tt2' if !defined $package{XGETTEXT_TT2};
-$package{XGETTEXT} = 'xgettext-tt2' if !defined $package{XGETTEXT};
-$package{CATOBJEXT} = 'xgettext-tt2' if !defined $package{CATOBJEXT};
+$package{XGETTEXT} = 'xgettext' if !defined $package{XGETTEXT};
+$package{CATOBJEXT} = '.po' if !defined $package{CATOBJEXT};
 
 $actions{$action}->();
 
@@ -124,6 +128,42 @@ EOF
     exit 0;
 }
 
+sub make_pot {
+    require Locale::TextDomain;
+
+    my ($pox, $pot) = ('plfiles.pox', 'plfiles.pot');
+    my @options = split / /, Locale::TextDomain->options;
+    my @cmd = ($package{XGETTEXT},
+               "--output=$pox", "--from-code=utf-8",
+               "--add-comments=TRANSLATORS:", "--files-from=PLFILES",
+               "--copyright-holder='$package{COPYRIGHT_HOLDER}'", "--force-po",
+               "--msgid-bugs-address='$package{MSGID_BUGS_ADDRESS}'",
+               @options);
+    failure if 0 != command @cmd;
+
+    print "# rm -f $pot\n";
+    unlink $pot;
+
+    print "# mv $pox $pot\n";
+    safe_rename $pox, $pot;
+
+    ($pox, $pot) = ("$package{TEXTDOMAIN}.pox", "$package{TEXTDOMAIN}.pot");
+    @cmd = ($package{XGETTEXT_TT2},
+               "--output=$pox", "--from-code=utf-8",
+               "--add-comments=TRANSLATORS:", "--files-from=POTFILES",
+               "--copyright-holder='$package{COPYRIGHT_HOLDER}'", "--force-po",
+               "--msgid-bugs-address='$package{MSGID_BUGS_ADDRESS}'");
+    failure if 0 != command @cmd;
+
+    print "# rm -f $pot\n";
+    unlink $pot;
+
+    print "# mv $pox $pot\n";
+    safe_rename $pox, $pot;
+
+    return 1;
+}
+
 sub make_config {
     print <<EOF;
 Configuration variables:
@@ -140,3 +180,45 @@ You can override all of the following configuration variables in the file
 'PACKAGE' in the current directory.
 EOF
 }
+
+sub command(@) {
+    my (@args) = @_;
+
+    my @pretty;
+    foreach my $arg (@args) {
+        my $pretty = $arg;
+        $pretty =~ s{(["\\])}{\\$1}g;
+        $pretty = qq{"$pretty"} if $pretty =~ /[ \t]/;
+        push @pretty, $pretty;
+    }
+
+    my $pretty = join ' ', @pretty;
+    print "# $pretty\n";
+
+    system @args;
+}
+
+sub fatal($) {
+    my ($msg) = @_;
+    
+    chomp $msg;
+
+    die "$0: *** $msg.  Stop!\n";
+}
+
+sub failure() {
+    if ($? == -1) {
+        fatal "failed to execute: $!";
+    }
+
+    die;
+}
+
+sub safe_rename {
+    my ($from, $to) = @_;
+
+    return 1 if rename $from, $to;
+
+    fatal "mv: rename '$from' to '$to': $!";
+}
+
