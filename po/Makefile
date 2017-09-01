@@ -3,6 +3,7 @@
 srcdir = .
 topdir = ..
 
+PERL         = perl
 MSGMERGE     = msgmerge
 MSGFMT       = msgfmt
 XGETTEXT_TT2 = xgettext-tt2
@@ -27,8 +28,6 @@ help:
 	@echo "  install                   - install mo files"
 	@echo "  all                       - all of the above"
 
-CFILES = $(srcdir)/CFILES \
-	$(shell cat $(srcdir)/CFILES) 
 PLFILES = $(srcdir)/PLFILES \
 	$(shell cat $(srcdir)/PLFILES) 
 POTFILES = $(srcdir)/POTFILES \
@@ -46,34 +45,13 @@ $(TD).pot: $(POTFILES)
 		--msgid-bugs-address='$(MSGID_BUGS_ADDRESS)' && \
 	rm -f $@ && mv $(TD).pox $@
 
-$(srcdir)/cfiles.pot: $(CFILES)
-	$(XGETTEXT) --output=$(srcdir)/cfiles.pox --from-code=utf-8 \
-		--files-from=$(srcdir)/CFILES --force-po \
-		--copyright-holder='$(COPYRIGHT_HOLDER)' \
-		--msgid-bugs-address='$(MSGID_BUGS_ADDRESS)' \
-		--keyword="" --keyword=_ --flag=_:1:pass-c-format && \
-	rm -f $@ && mv $(srcdir)/cfiles.pox $@
-
 $(srcdir)/plfiles.pot: $(PLFILES)
 	$(XGETTEXT) --output=$(srcdir)/plfiles.pox --from-code=utf-8 \
 		--files-from=$(srcdir)/PLFILES --force-po \
 		--copyright-holder='$(COPYRIGHT_HOLDER)' \
 		--msgid-bugs-address='$(MSGID_BUGS_ADDRESS)' \
-		--keyword="" --keyword=__ \
-		--keyword=__x --keyword=__n:1,2 --keyword=__nx:1,2 \
-		--keyword=__xn:1,2 --keyword=__p:1c,2 --keyword=__px:1c,2 \
-		--keyword=__np:1c,2,3 --keyword=__npx:1c,2,3 --keyword=N__:1 \
-		--keyword=N__n:1,2 --keyword=N__p:1c,2 --keyword=N__np:1c,2,3 \
-		--keyword=$$__ --keyword=%__ \
-		--flag=__x:1:perl-brace-format \
-		--keyword=__nx:1:perl-brace-format \
-		--keyword=__nx:2:perl-brace-format \
-		--keyword=__xn:1:perl-brace-format \
-		--keyword=__xn:2:perl-brace-format \
-		--keyword=__px:2:perl-brace-format \
-		--keyword=__npx:2:perl-brace-format \
-		--keyword=__npx:3:perl-brace-format \
-		--flag=_:1:pass-c-format && \
+		`$(PERL) -MLocale::TextDomain \
+                -e "print Locale::TextDomain->options"` && \
 	rm -f $@ && mv $(srcdir)/plfiles.pox $@
 
 install: $(MO_FILES)

@@ -21,21 +21,18 @@ msgid "Example for Template-Plugin-Gettext"
 msgstr "Esempio per Template-Plugin-Gettext"
 
 #: ../templates/index.html:8
+#, perl-brace-format
 msgid "Hello, {user}!"
 msgstr "Ciao, {user}!"
 
 #: ../templates/index.html:10
+#, perl-brace-format
 msgid ""
 "The current locale for textdomain '{textdomain}' and language '{lang}' is "
 "'{locale}'!"
 msgstr ""
 "La locale corrente per dominio testo \"{textdomain}\" e lingua \"{lang}\" è "
 "\"{locale}\"!"
-
-#: ../src/example.c:18
-#, c-format
-msgid "Try '%s --help' for more information.\n"
-msgstr "Usare \"%s --help\" per maggiori informazioni.\n"
 
 #: ../src/example.pl:13
 #, perl-brace-format
