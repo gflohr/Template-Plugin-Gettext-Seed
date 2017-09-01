@@ -13,10 +13,11 @@ TEXTDOMAIN =
 COPYRIGHT_HOLDER = Edit the file PACKAGE to change this field
 
 # Where to send msgid bugs?  
-MSGID_BUGS_ADDRESS=Edit the file PACAKGE to change this
+MSGID_BUGS_ADDRESS=Edit the file PACAKGE to change this field
 
 # You can override the defaults for the following.
 #XGETTEXT_TT2 = xgettext-tt2
 #MSGMERGE     = msgmerge
 #MSGFMT       = msgfmt
 #XGETTEXT     = xgettext
+#PERL         = perl
