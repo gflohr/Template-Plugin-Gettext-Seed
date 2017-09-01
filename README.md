@@ -175,3 +175,61 @@ top-level `.gitignore` and `po/.gitignore` into your project.
 
 ### Adding A New Language
 
+Let's assume that we want to add a Spanish translation.  You first
+have to edit `po/PACKAGE` and add `es` to the list of languages in
+the variable `LINGUA`.
+
+Now create a stub translation file `po/es.po`.  This is easiest done
+with the program `msginit`:
+
+```
+$ cd po
+$ msginit --input=TEXTDOMAIN.pot --locale=es
+$ make update-po
+```
+
+As always, replace `TEXTDOMAIN` with the text domain configured in
+`PACKAGE`.
+
+The command `msginit` creates the file `es.po` and with some
+boilerplate.  With `make update-po` you copy all translatable
+strings from `TEXTDOMAIN.pot` into the `.po` file.
+
+Don't forget to put the Spanish `po/es.po` file under version
+control.  After it has been translated, compile and install it
+as described in the previous section.
+
+## Translation Workflow For the Lazy
+
+The only thing that you have to remember is to always keep the
+list of input files `po/POTFILES` up-to-date.  Then, whenever
+you feel that something about the translations have to be done:
+
+```
+$ cd po
+$ make all
+$ cd ..
+```
+
+That may do things that are not necessary but it will never break
+anything.
+
+## Adding Perl Files
+
+It will often happen that your template toolkit project also contains
+localized Perl files.  This seed project is already prepared for 
+that.  Take a look into `po/POTFILES`.  The last line should read
+`./plfiles.pot`.
+
+The file `po/plfiles.pot` contains the PO entries for all Perl source
+files (more precisely those listed in `po/PLFILES`).  The Makefile
+takes extract the strings from the Perl files with GNU `xgettext`
+and writes them into `po/plfiles.pot`.  This file is then used
+as an input source file for `xgettext-tt2` from
+[Template-Plugin-Gettext](https://github.com/gflohr/Template-Plugin-Gettext).
+This works because `xgettext-tt2` just like GNU `xgettext` also 
+support input files in `.po` format.
+
+If there are no Perl files in your project, just delete the 
+line with `./plfiles.pot` in `po/POTFILES`.
+
