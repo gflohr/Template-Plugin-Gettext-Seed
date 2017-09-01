@@ -209,9 +209,13 @@ sub fatal($) {
 sub failure() {
     if ($? == -1) {
         fatal "failed to execute: $!";
+    } elsif ($? & 127) {
+        fatal sprintf "child died with signal %d, %s coredump\n",
+                                ($? & 127),  ($? & 128) ? 'with' : 'without';
     }
 
-    die;
+    my $error = $? >> 8;
+    fatal "Error $error";
 }
 
 sub safe_rename {
