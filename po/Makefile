@@ -72,15 +72,13 @@ update-po:
 	$(MAKE) $(TD).pot
 	cd $(srcdir); \
         catalogs='$(LINGUAS)'; \
-        for cat in $$catalogs; do \
-          cat=`basename $$cat`; \
-          lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
+        for lang in $$catalogs; do \
           mv $$lang.po $$lang.old.po; \
           echo "$$lang:"; \
           if $(MSGMERGE) $$lang.old.po $(TD).pot -o $$lang.po; then \
             rm -f $$lang.old.po; \
           else \
-            echo "msgmerge for $$cat failed!"; \
+            echo "msgmerge for $$lang failed!"; \
             rm -f $$lang.po; \
             mv $$lang.old.po $$lang.po; \
           fi; \

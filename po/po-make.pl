@@ -36,6 +36,7 @@ sub safe_rename($$);
 my %actions = (
   pot => \&make_pot,
   config => \&make_config,
+  'update-po' => \&make_update_po,
 );
 
 my $action = $ARGV[0];
@@ -164,6 +165,29 @@ sub make_pot {
     return 1;
 }
 
+sub make_update_po {
+    my @linguas = split /[ \t]+/, $package{LINGUAS};
+
+    foreach my $lang (@linguas) {
+        print "$lang:\n";
+        
+        print "# mv $lang.po $lang.old.po\n";
+        safe_rename "$lang.po", "$lang.old.po";
+
+        my @cmd = ($package{MSGMERGE}, "$lang.old.po", 
+                   "$package{TEXTDOMAIN}.pot", '-o', "$lang.po");
+        if (0 == command @cmd) {
+            print "# rm -f $lang.old.po\n";
+        } else {
+            warn "$package{MSGMERGE} for $lang failed.\n";
+            print "# mv $lang.old.po $lang.po\n";
+            safe_rename "$lang.old.po", "$lang.po";
+        }
+    }
+
+    return 1;
+}
+
 sub make_config {
     print <<EOF;
 Configuration variables:
@@ -218,7 +242,7 @@ sub failure() {
     fatal "Error $error";
 }
 
-sub safe_rename {
+sub safe_rename($$) {
     my ($from, $to) = @_;
 
     return 1 if rename $from, $to;
