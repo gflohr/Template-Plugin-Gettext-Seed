@@ -43,6 +43,7 @@ my %actions = (
   'update-po' => \&make_update_po,
   'update-mo' => \&make_update_mo,
   install => \&make_install,
+  all => \&make_all,
 );
 
 my $action = $ARGV[0];
@@ -250,6 +251,10 @@ sub make_install {
     }
 
     return 1;
+}
+
+sub make_all {
+    make_pot && make_update_po && make_update_mo && make_install;
 }
 
 sub make_config {
