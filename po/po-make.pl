@@ -25,6 +25,8 @@ use strict;
 
 use File::Basename qw(dirname);
 use File::Spec;
+use File::Path qw(make_path);
+use File::Copy qw(copy);
 
 sub read_package();
 sub usage(;$);
@@ -38,6 +40,7 @@ my %actions = (
   config => \&make_config,
   'update-po' => \&make_update_po,
   'update-mo' => \&make_update_mo,
+  install => \&make_install,
 );
 
 my $action = $ARGV[0];
@@ -197,6 +200,22 @@ sub make_update_mo {
                    "--statistics", "--verbose",
                    '-o', "$lang.gmo", "$lang.po");
         failure if 0 != command @cmd;
+    }
+
+    return 1;
+}
+
+sub make_install {
+    my @linguas = split /[ \t]+/, $package{LINGUAS};
+
+    my $targetdir = File::Spec->catfile('..', 'LocaleData');
+    foreach my $lang (@linguas) {
+        my $destdir = File::Spec->catfile($targetdir, $lang, 'LC_MESSAGES');
+        print "# mkdir -p $destdir\n";
+        make_path $destdir if !-e $destdir;
+        my $dest = File::Spec->catfile($destdir, "$package{TEXTDOMAIN}.mo");
+        print "# cp $lang.gmo $dest\n";
+        copy "$lang.gmo", $dest or fatal $!;
     }
 
     return 1;
