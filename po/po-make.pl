@@ -201,8 +201,19 @@ sub make_update_po {
 
 sub make_update_mo {
     my @linguas = split /[ \t]+/, $package{LINGUAS};
+    my @deps = filelist 'PLFILES';
+    push @deps, filelist 'POTFILES';
+    push @deps, 'PLFILES', 'POTFILES';
+    push @deps, "$package{TEXTDOMAIN}.pot";
+    foreach my $lang (@linguas) {
+        if (!up_to_date "$lang.po", @deps) {
+            make_update_po;
+            last;
+        }
+    }
 
     foreach my $lang (@linguas) {
+        make_update_po if !up_to_date "$lang.po", @deps;
         my @cmd = ($package{MSGFMT}, "--check", 
                    "--statistics", "--verbose",
                    '-o', "$lang.gmo", "$lang.po");
@@ -214,6 +225,17 @@ sub make_update_mo {
 
 sub make_install {
     my @linguas = split /[ \t]+/, $package{LINGUAS};
+    my @deps = filelist 'PLFILES';
+    push @deps, filelist 'POTFILES';
+    push @deps, 'PLFILES', 'POTFILES';
+    push @deps, "$package{TEXTDOMAIN}.pot";
+    push @deps, map { "$_.po" } @linguas;
+    foreach my $lang (@linguas) {
+        if (!up_to_date "$lang.gmo", @deps) {
+            make_update_mo;
+            last;
+        }
+    }
 
     my $targetdir = File::Spec->catfile('..', 'LocaleData');
     foreach my $lang (@linguas) {
