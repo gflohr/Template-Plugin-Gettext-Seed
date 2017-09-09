@@ -37,6 +37,7 @@ my %actions = (
   pot => \&make_pot,
   config => \&make_config,
   'update-po' => \&make_update_po,
+  'update-mo' => \&make_update_mo,
 );
 
 my $action = $ARGV[0];
@@ -183,6 +184,19 @@ sub make_update_po {
             print "# mv $lang.old.po $lang.po\n";
             safe_rename "$lang.old.po", "$lang.po";
         }
+    }
+
+    return 1;
+}
+
+sub make_update_mo {
+    my @linguas = split /[ \t]+/, $package{LINGUAS};
+
+    foreach my $lang (@linguas) {
+        my @cmd = ($package{MSGFMT}, "--check", 
+                   "--statistics", "--verbose",
+                   '-o', "$lang.gmo", "$lang.po");
+        failure if 0 != command @cmd;
     }
 
     return 1;
