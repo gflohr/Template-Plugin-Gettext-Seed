@@ -7,14 +7,14 @@ This is a seed project for [https://github.com/Template-Plugin-Gettext](https://
 First, clone the repository to a location of your choice.  If you want to
 use Git as your version control system, simply remove the remote:
 
-```
+```shell
 $ cd Template-Plugin-Gettext-Seed
 $ git remote rm origin
 ```
 
 Otherwise delete the git directory:
 
-```
+```shell
 $ cd Template-Plugin-Gettext-Seed
 $ rm -rf .git
 ```
@@ -24,9 +24,10 @@ directory is the top-level directory.
 
 ### Prerequisites
 
-Apart from Perl, the Template Toolkit and Template-Plugin-Gettext, you also
-need GNU make and the tools for GNU Gettext.  Both are definitely available
-as pre-built packages for your operating system.
+Apart from Perl, the Template Toolkit and Template-Plugin-Gettext, 
+you also need GNU make (unless you want to use the experimental
+pure Perl solution) and the tools for GNU Gettext.  Both are 
+definitely available as pre-built packages for your operating system.
 
 You also need a recent version of `libintl-perl`, at least version 
 1.28.  If your vendor doesn't have a sufficiently recent version, 
@@ -37,7 +38,7 @@ Locale::TextDomain`.
 
 Rename the file `po/PACKAGE.sample`.
 
-```
+```shell
 $ cd po
 $ mv PACKAGE.sample PACKAGE
 $ cd ..
@@ -55,7 +56,7 @@ system.  You can usually check that with the command `locale -a`.
 
 Now compile and install the translations:
 
-```
+```shell
 $ cd po
 $ make all
 $ cd ..
@@ -63,7 +64,7 @@ $ cd ..
 
 The make target "all" will run all the necessary steps with just one command.  Now try to render the template:
 
-```
+```html
 $ perl render.pl TEXTDOMAIN fr
 <!DOCTYPE html>
 <html>
@@ -88,7 +89,7 @@ that you have specified on the command-line.
 If you don't see output in the selected language, but in English,
 inspect the last paragraph.  It should read something like
 
-```
+```html
 <p>
 The current locale for textdomain 'com.mydomain.www' and language 'en' is 'en_US.utf-8'!
 </p>
@@ -99,7 +100,7 @@ It means that switching to a French locale has failed.  You can
 try "de", "it", or "bg" for other languages.  If that alsl fails,
 open the Perl script `render.pl` and edit this it:
 
-```
+```perl
 use Locale::Messages;
 Locale::Messages->select_package('gettext_pp');
 ```
@@ -124,7 +125,7 @@ files or other garbage.
 After templates have been changed, you have to update the master
 catalog and merge the new strings into the existing translations.
 
-```
+```shell
 $ cd po
 $ make pot
 ... output omitted ...
@@ -152,7 +153,7 @@ When you receive translated `.po` files, copy them into the `po`
 subdirectory and commit them if you are using version control. 
 Next compile and install them:
 
-```
+```shell
 $ cd po
 $ make update-mo
 ... output omitted ...
@@ -182,7 +183,7 @@ the variable `LINGUA`.
 Now create a stub translation file `po/es.po`.  This is easiest done
 with the program `msginit`:
 
-```
+```shell
 $ cd po
 $ msginit --input=TEXTDOMAIN.pot --locale=es
 $ make update-po
@@ -205,7 +206,7 @@ The only thing that you have to remember is to always keep the
 list of input files `po/POTFILES` up-to-date.  Then, whenever
 you feel that something about the translations have to be done:
 
-```
+```shell
 $ cd po
 $ make all
 $ cd ..
@@ -233,3 +234,36 @@ support input files in `.po` format.
 If there are no Perl files in your project, just delete the 
 line with `./plfiles.pot` in `po/POTFILES`.
 
+## Pure Perl Solution
+
+An experimental script `po/po-make.pl` can be used as an alternative
+to the solution with `make`:
+
+```shell
+$ cd po
+$ ./po-make.pl 
+./po-make.pl: missing action!
+Usage: ./po-make.pl ACTION
+
+Available actions:
+  pot                       - remake master catalog
+  update-po                 - merge po files
+  update-mo                 - regenerate mo files
+  install                   - install mo files
+  all                       - all of the above
+  config                    - show configuration
+```
+
+This bears an amazing similarity to what "make" spits out and
+`./po-make.pl update-mo` really does the same as `make update-mo`.
+However, `po-make.pl` has one additional action/target `config`
+which dumps the configuration read from the file `PACKAGE` so
+that you can check your settings.
+
+Just like the Makefile solution, `po-make.pl` is meant as a
+starting point for your own experiments and implementations.
+
+## Author
+
+This seed project for [Template-Plugin-Gettext](https://github.com/gflohr/Template-Plugin-Gettext) 
+was written by [Guido Flohr](http://www.guido-flohr.net/).
