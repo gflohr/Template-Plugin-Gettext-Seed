@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Template-Plugin-Gettext-Seed\n"
-"Report-Msgid-Bugs-To: Edit the file PACAKGE to change this\n"
+"Report-Msgid-Bugs-To: 'Edit the file PACAKGE to change this'\n"
 "PO-Revision-Date: 2017-08-30 18:07+0300\n"
 "Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
 "Language-Team: French\n"

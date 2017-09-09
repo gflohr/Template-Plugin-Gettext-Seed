@@ -34,6 +34,8 @@ sub command(@);
 sub fatal($);
 sub failure();
 sub safe_rename($$);
+sub up_to_date($@);
+sub filelist($);
 
 my %actions = (
   pot => \&make_pot,
@@ -170,6 +172,11 @@ sub make_pot {
 }
 
 sub make_update_po {
+    my @deps = filelist 'PLFILES';
+    push @deps, filelist 'POTFILES';
+    push @deps, 'PLFILES', 'POTFILES';
+    make_pot if !up_to_date "$package{TEXTDOMAIN}.pot", @deps;
+
     my @linguas = split /[ \t]+/, $package{LINGUAS};
 
     foreach my $lang (@linguas) {
@@ -283,3 +290,22 @@ sub safe_rename($$) {
     fatal "mv: rename '$from' to '$to': $!";
 }
 
+sub up_to_date($@) {
+    my ($target, @deps) = @_;
+
+    my @ref = stat $target or return;
+
+    foreach my $dep (@deps) {
+        my @stat = stat $dep or return;
+        return if $stat[9] > $ref[9];
+    }
+
+    return 1;
+}
+
+sub filelist($) {
+    my ($filelist) = @_;
+
+    open my $fh, '<', $filelist or fatal "cannot read $filelist: $!";
+    return grep { length } map { s/^[ \r\t]*//; s/[ \t\r\n]*$//; $_ } <$fh>;
+}
