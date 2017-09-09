@@ -47,8 +47,10 @@ my %actions = (
 
 my $action = $ARGV[0];
 
-if (@ARGV != 1) {
-    usage "too many arguments!"
+if (@ARGV > 1) {
+    usage "too many arguments!";
+} elsif (@ARGV < 1) {
+    usage "missing action!";
 } elsif (!$actions{$action}) {
     usage "unrecognized action '$action'";
 }
