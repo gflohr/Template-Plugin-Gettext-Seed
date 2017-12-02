@@ -192,6 +192,7 @@ sub make_update_po {
                    "$package{TEXTDOMAIN}.pot", '-o', "$lang.po");
         if (0 == command @cmd) {
             print "# rm -f $lang.old.po\n";
+            unlink "$lang.old.po";
         } else {
             warn "$package{MSGMERGE} for $lang failed.\n";
             print "# mv $lang.old.po $lang.po\n";
@@ -338,3 +339,4 @@ sub filelist($) {
     open my $fh, '<', $filelist or fatal "cannot read $filelist: $!";
     return grep { length } map { s/^[ \r\t]*//; s/[ \t\r\n]*$//; $_ } <$fh>;
 }
+
